@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialCartState = {
     items: [],
     totalQuantity: 0,
-    totalPrice: 0,
+    changed: false,
 }
 
 const cartSlice = createSlice({
@@ -16,6 +16,7 @@ const cartSlice = createSlice({
             const existingItem = state.items.find(item => item.id === newItem.id);
             // Increase Total quantity by 1
             state.totalQuantity++;
+            state.changed = true;
             // If does not already exist
             if (!existingItem) {
                 state.items.push({
@@ -37,6 +38,7 @@ const cartSlice = createSlice({
             // Find out how many are in array
             const existingItem = state.items.find(item => item.id === id);
             state.totalQuantity--;
+            state.changed = true;
             if (existingItem.quantity === 1) {
                 // Make new array with all items except id match item
                 state.items = state.items.filter(item => item.id !== id);
@@ -46,6 +48,10 @@ const cartSlice = createSlice({
             }
 
         },
+        replaceCart(state, action) {
+            state.totalQuantity = action.payload.totalQuantity;
+            state.items = action.payload.items;
+        }
     }
 })
 
